@@ -11,4 +11,5 @@ Anyway, this is now a fully functioning example with nearly no comments. I still
 
 Oh! I've also given you a better, easy to follow example on how I think the MVC system should work with BB10... Please fork this and give me feedback if there's anywhere I could improve this design. I tried to keep it pretty easy.
 
+
 So give this a fork and play around. I'll be adding more code as I find time. I'll also do a quick write-up as to exactly what's happening on [my website](http://www.ryannickel.com)
