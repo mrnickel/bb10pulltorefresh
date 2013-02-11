@@ -16,7 +16,8 @@
 
 #include <bb/cascades/Application>
 
-#include "app.hpp"
+//#include "app.hpp"
+#include "TwitterController.h"
 
 using ::bb::cascades::Application;
 
@@ -31,7 +32,8 @@ Q_DECL_EXPORT int main(int argc, char** argv)
 {
     Application app(argc, argv);
     qInstallMsgHandler(myMessageOutput);
-    App mainApp;
+//    App mainApp;
+    TwitterController twitter;
 
     return Application::exec();
 }

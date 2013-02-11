@@ -58,17 +58,12 @@ Container {
     ]
     horizontalAlignment: HorizontalAlignment.Fill
     function released()
-    {
-        console.log(readyForRefresh);
+    {        
         if (readyForRefresh == "yes") {
             readyForRefresh = "no";
             refreshing = "yes";
             refreshTriggered();            
-        } else {
-            console.log("It was released, but don't do the refresh");
         }
-
-        console.log("Set to false: "+readyForRefresh);
     }
 }
 

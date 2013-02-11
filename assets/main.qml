@@ -18,19 +18,7 @@ import bb.cascades 1.0
 
 NavigationPane {
     id: navigationPane
-
-    onPopTransitionEnded: page.destroy()
-
     Page {
-        //! [0]
-        function pushPane()
-        {
-            navigationPane.push(customViewPage.createObject())
-        }
-
-        onCreationCompleted: _timeline.tweetsLoaded.connect(pushPane)
-        //! [0]
-
         Container {
             layout: DockLayout {}
 
@@ -45,68 +33,67 @@ NavigationPane {
                 horizontalAlignment: HorizontalAlignment.Fill
                 verticalAlignment: VerticalAlignment.Fill
 
-                topPadding: 20
-                leftPadding: 20
-                rightPadding: 20
-                bottomPadding: 20
-
                 layout: DockLayout {}
-
+                ActivityIndicator {                    
+                    running: true
+                    verticalAlignment: VerticalAlignment.Fill
+                    horizontalAlignment: HorizontalAlignment.Fill
+                    objectName: "loadingIndicator"
+                }
                 Container {
                     id: screenInfo
                     verticalAlignment: VerticalAlignment.Top
 
-                    Label {
-                        text: qsTr("Enter a twitter screen name: ")
-                        textStyle {
-                            color: Color.Gray
-                        }
-                    }
+			        ListView {                        
+                        signal refreshTriggered()
+                        id: timeline
+			            listItemComponents: [
+			                ListItemComponent {			
+			                    Container {
+			                        id: itemRoot			                        
+			                        preferredHeight: 200
+                                    horizontalAlignment: HorizontalAlignment.Fill
+                                    topPadding: 20
+		                            leftPadding: 20
+		                            rightPadding: 20
+		                            bottomPadding: 20
+		
+		                            Label {			                                
+		                                text: ListItemData.fromUserName
+                                        textStyle.color: Color.create("#ffffff")
+                                        textStyle.fontWeight: FontWeight.Bold
+                                    }
+		
+		                            Label {
+		                                preferredHeight: 200			
+		                                text: ListItemData.text	
+		                                multiline: true
+                                        textStyle.color: Color.create("#ffffff")
+                                    }
 
-                    //! [1]
-                    TextField {
-                        id: screenName
-                        text: "BlackBerryDev"
-                    }
-
-                    Button {
-                        horizontalAlignment: HorizontalAlignment.Center
-
-                        enabled: !_timeline.active
-
-                        text: qsTr("Timeline")
-                        onClicked: {
-                            _timeline.requestTweets(screenName.text);
-                        }
-                    }
-                    //! [1]
+			                    }
+			                }
+			            ]
+			            
+			           leadingVisual: RefreshHeader { 
+			                id: refreshHandler        
+			                onRefreshTriggered: {
+			                    timeline.refreshTriggered();                            
+			                }                   
+			            }
+			            leadingVisualSnapThreshold: 1.2
+			            onTouch: {
+			                if(event.touchType == 2) {
+			                    refreshHandler.released();   
+			                }                              
+			            }
+                        objectName: "tweetList"
+                        function dataUpdated() {
+			                refreshHandler.refreshing = "no";
+			            } 
+			        }
                 }
-
-                //! [2]
-                Label {
-                    verticalAlignment: VerticalAlignment.Center
-
-                    visible: _timeline.error
-
-                    multiline: true
-
-                    text: _timeline.errorMessage
-                    textStyle {
-                        base: SystemDefaults.TextStyles.BigText;
-                        color: Color.Gray
-                    }
-                }
-                //! [2]
             }
         }
-
-        //! [4]
-        attachedObjects: [
-            ComponentDefinition {
-                id: customViewPage
-                source: "CustomTimelineView.qml"
-            }
-        ]
-        //! [4]
     }
 }
