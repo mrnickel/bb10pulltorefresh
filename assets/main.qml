@@ -21,77 +21,19 @@ NavigationPane {
     Page {
         Container {
             layout: DockLayout {}
-
             ImageView {
                 horizontalAlignment: HorizontalAlignment.Fill
                 verticalAlignment: VerticalAlignment.Fill
 
                 imageSource: "asset:///images/background.png"
-            }
+            }                        
 
             Container {
                 horizontalAlignment: HorizontalAlignment.Fill
                 verticalAlignment: VerticalAlignment.Fill
-
-                layout: DockLayout {}
-                ActivityIndicator {                    
-                    running: true
-                    verticalAlignment: VerticalAlignment.Fill
-                    horizontalAlignment: HorizontalAlignment.Fill
-                    objectName: "loadingIndicator"
-                }
-                Container {
-                    id: screenInfo
-                    verticalAlignment: VerticalAlignment.Top
-
-			        ListView {                        
-                        signal refreshTriggered()
-                        id: timeline
-			            listItemComponents: [
-			                ListItemComponent {			
-			                    Container {
-			                        id: itemRoot			                        
-			                        preferredHeight: 200
-                                    horizontalAlignment: HorizontalAlignment.Fill
-                                    topPadding: 20
-		                            leftPadding: 20
-		                            rightPadding: 20
-		                            bottomPadding: 20
-		
-		                            Label {			                                
-		                                text: ListItemData.fromUserName
-                                        textStyle.color: Color.create("#ffffff")
-                                        textStyle.fontWeight: FontWeight.Bold
-                                    }
-		
-		                            Label {
-		                                preferredHeight: 200			
-		                                text: ListItemData.text	
-		                                multiline: true
-                                        textStyle.color: Color.create("#ffffff")
-                                    }
-
-			                    }
-			                }
-			            ]
-			            
-			           leadingVisual: RefreshHeader { 
-			                id: refreshHandler        
-			                onRefreshTriggered: {
-			                    timeline.refreshTriggered();                            
-			                }                   
-			            }
-			            leadingVisualSnapThreshold: 1.2
-			            onTouch: {
-			                if(event.touchType == 2) {
-			                    refreshHandler.released();   
-			                }                              
-			            }
-                        objectName: "tweetList"
-                        function dataUpdated() {
-			                refreshHandler.refreshing = "no";
-			            } 
-			        }
+                
+                PullToRefreshListView {
+                    objectName: "tweetList"
                 }
             }
         }

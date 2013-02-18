@@ -105,6 +105,12 @@ void Twitter::onDataReceived()
     if (success )
     {
     	if (response != "[]") {
+
+    		if (_refreshing) {
+    			_tweetList.clear();
+    			emit itemsChanged(bb::cascades::DataModelChangeType::Init);
+    		}
+
     		bb::data::JsonDataAccess jda;
     		QVariant jsonva = jda.loadFromBuffer(response);
     		QVariantMap map = jsonva.toMap();
@@ -149,8 +155,7 @@ int Twitter::numRecs()
 
 void Twitter::refreshData()
 {
-	_tweetList.clear();
-	emit itemsChanged(bb::cascades::DataModelChangeType::Init);
+	_refreshing = true;
 	requestData();
 }
 

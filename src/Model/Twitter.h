@@ -30,6 +30,7 @@ public:
     void refreshData();
     bool loading();
 
+
 public slots:
     void onDataReceived();
     void replyFinished(QNetworkReply* reply);
@@ -40,6 +41,7 @@ signals:
 
 private:
 	bool _loading;
+	bool _refreshing;
 	QVariantList _tweetList;
 	QNetworkAccessManager* netManager;
 };

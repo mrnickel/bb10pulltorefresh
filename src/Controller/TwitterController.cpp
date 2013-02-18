@@ -24,7 +24,7 @@ TwitterController::TwitterController(QObject *parent)
     Application::instance()->setScene(root);
 
     _tweetList = Application::instance()->scene()->findChild<bb::cascades::ListView*>("tweetList");
-    _activityIndicator = Application::instance()->scene()->findChild<QObject*>("loadingIndicator");
+    _tweetList->setProperty("loading", true);
 
 	model = new Twitter();
 
@@ -46,15 +46,13 @@ void TwitterController::parseComplete(bool completed, QString title)
 		//show toast error
 		qDebug() << "Show toast error";
 	} else {
-		_activityIndicator->setProperty("running", false);
+		_tweetList->setProperty("loading", false);
 	}
-
-	QMetaObject::invokeMethod(_tweetList, "dataUpdated");
 }
 
 void TwitterController::loadingTweets()
 {
-    _activityIndicator->setProperty("running", true);
+	_tweetList->setProperty("loading", true);
 }
 
 void TwitterController::refresh()
