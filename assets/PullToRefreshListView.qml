@@ -1,55 +1,44 @@
+/* Forked from https://github.com/mrnickel/bb10pulltorefresh 
+ * 
+ * To use in QML, replace ListView{} by PullToRefreshListView {id: myListView}
+ *
+ * Add connection to signal:
+ * onCreationCompleted: {myListView.refreshTriggered.connect(onRefreshTriggered);}
+ *
+ * function onRefreshTriggered() {
+ *         myListView.loading = true;
+ *         // Trigger refresh of your data
+ *     }
+ *
+ * When refresh is done, set loading to false:
+ * function onPodcastLoaded(rp) {     
+ *     myListView.loading = false; }
+ *
+ */
+
 import bb.cascades 1.0
 
-ListView {                        
+ListView {
     signal refreshTriggered()
-    property bool loading: false    
+    property bool loading: false
     id: refreshableList
-    objectName: "refreshableList"
     leadingVisualSnapThreshold: 2.0
-    
-    listItemComponents: [
-        ListItemComponent {			
-            Container {
-                id: itemRoot			                        
-                preferredHeight: 200
-                horizontalAlignment: HorizontalAlignment.Fill
-                topPadding: 20
-                leftPadding: 20
-                rightPadding: 20
-                bottomPadding: 20
-
-                Label {			                                
-                    text: ListItemData.fromUserName
-                    textStyle.color: Color.create("#ffffff")
-                    textStyle.fontWeight: FontWeight.Bold
-                }
-
-                Label {
-                    preferredHeight: 200			
-                    text: ListItemData.text	
-                    multiline: true
-                    textStyle.color: Color.create("#ffffff")
-                }
-
-            }
-        }
-    ]
-    
-   leadingVisual: RefreshHeader { 
-        id: refreshHandler        
+    leadingVisual: RefreshHeader {
+        id: refreshHandler
         onRefreshTriggered: {
-            refreshableList.refreshTriggered();                            
-        }   
+            refreshableList.refreshTriggered();
+        }
     }
-    
     onTouch: {
-        if(event.touchType == 2) { //pulled and released
-            refreshHandler.released();   
-        }                              
+        refreshHandler.onListViewTouch(event);
     }
-    
     onLoadingChanged: {
         refreshHandler.refreshing = refreshableList.loading;
+                 
+        if(!refreshHandler.refreshing) {
+            // If the refresh is done 
+            // Force scroll to top to ensure that all items are visible
+            scrollToPosition(ScrollPosition.Beginning, ScrollAnimation.None);
+        }
     }
-    
 }

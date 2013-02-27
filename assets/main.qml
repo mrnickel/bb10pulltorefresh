@@ -34,6 +34,33 @@ NavigationPane {
                 
                 PullToRefreshListView {
                     objectName: "tweetList"
+                    listItemComponents: [
+                        ListItemComponent {         
+                            Container {
+                                id: itemRoot                                    
+                                preferredHeight: 200
+                                horizontalAlignment: HorizontalAlignment.Fill
+                                topPadding: 20
+                                leftPadding: 20
+                                rightPadding: 20
+                                bottomPadding: 20
+                
+                                Label {                                         
+                                    text: ListItemData.fromUserName
+                                    textStyle.color: Color.create("#ffffff")
+                                    textStyle.fontWeight: FontWeight.Bold
+                                }
+                
+                                Label {
+                                    preferredHeight: 200            
+                                    text: ListItemData.text 
+                                    multiline: true
+                                    textStyle.color: Color.create("#ffffff")
+                                }
+                
+                            }
+                        }
+                    ]
                 }
             }
         }
